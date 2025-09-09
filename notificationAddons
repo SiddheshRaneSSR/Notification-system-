@@ -1,0 +1,6 @@
+1.add batch db operations for performnace 
+2.add a decider
+3.dynamic and static notfication 
+4.add acid methods in db operation 
+5.notification db table will explode - noSQL
+6.how to aggregate notification  - 1 obj per post? 
