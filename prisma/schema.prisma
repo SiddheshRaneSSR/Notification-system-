@@ -27,21 +27,7 @@ model Notification {
   title       String
   message     String
   type        NotificationType   // enum
-  status      NotificationStatus @default(UNREAD)
   scheduledAt DateTime?          // only set if type = SCHEDULED
-  user        User               @relation(fields: [userId], references: [id])
   userId      Int
   createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
-}
-
-enum NotificationType {
-  USER_GENERATED
-  SYSTEM_GENERATED
-  SCHEDULED
-}
-
-enum NotificationStatus {
-  UNREAD
-  READ
 }
