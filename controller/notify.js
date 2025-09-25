@@ -1,5 +1,5 @@
-const Notification = require("../models/NotficationsModel");
-
+const Notification = require("../models/NotificationsModel");
+const redisClient = require("../config/redisConfig"); // Use the singleton instance
 
 
 // controllers/notificationController.js
@@ -8,6 +8,12 @@ module.exports = {
     try {
       const notification = new Notification(req.body);
       await notification.save();
+      await redisClient.set(
+            `notification:${notification._id}`,
+            JSON.stringify(notification),
+            "EX",
+            60 * 60 * 24 * 3 //3 days
+            );
       res.status(201).json({ success: true, data: notification });
     } catch (err) {
       res.status(400).json({ success: false, error: err.message });
