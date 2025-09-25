@@ -19,6 +19,8 @@ module.exports = {
       res.status(400).json({ success: false, error: err.message });
     }
   },
+
+
   async GetSpecificuserNotify (req, res) {
     try {
         const { appId, userId } = req.params;
@@ -53,7 +55,7 @@ module.exports = {
         { $addToSet: { readBy: userId } }, // add userId if not already present
         { new: true }
         );
-
+        await redisClient.del(`notification:${id}`); // Invalidate cache  
         res.json({ success: true, data: updated });
     } catch (err) {
         res.status(400).json({ success: false, error: err.message });

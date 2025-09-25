@@ -10,6 +10,6 @@ router.post("/", postNotify);
 router.get("/:appId/:userId",GetSpecificuserNotify);
 
 // 3️⃣ Mark a notification as read
-router.post("/:id/read", MarknotifyRead);
+router.delete("/:id/read", MarknotifyRead);
 
 module.exports = router;
