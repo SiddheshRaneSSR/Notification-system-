@@ -1,5 +1,6 @@
 const Notification = require("../models/NotificationsModel");
-const redisClient = require("../config/redisConfig"); // Use the singleton instance
+const redis = require("../config/redisConfig"); // Use the singleton instance
+
 
 
 // controllers/notificationController.js
@@ -7,13 +8,15 @@ module.exports = {
   async postNotify(req, res) {
     try {
       const notification = new Notification(req.body);
-      await notification.save();
-      await redisClient.set(
+      const notificationsave = await notification.save();
+      const redisset = await redis.set(
             `notification:${notification._id}`,
             JSON.stringify(notification),
             "EX",
             60 * 60 * 24 * 3 //3 days
             );
+
+      console.log(`notfication save = ${notificationsave}, \nredisset = ${redisset}`)
       res.status(201).json({ success: true, data: notification });
     } catch (err) {
       res.status(400).json({ success: false, error: err.message });
@@ -55,7 +58,7 @@ module.exports = {
         { $addToSet: { readBy: userId } }, // add userId if not already present
         { new: true }
         );
-        await redisClient.del(`notification:${id}`); // Invalidate cache  
+        await redis.del(`notification:${id}`); // Invalidate cache  
         res.json({ success: true, data: updated });
     } catch (err) {
         res.status(400).json({ success: false, error: err.message });
