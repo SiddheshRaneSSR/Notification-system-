@@ -63,6 +63,29 @@ module.exports = {
     } catch (err) {
         res.status(400).json({ success: false, error: err.message });
     }
+   },
+
+   async GetNotification(req,res){
+
+      try{
+          const {id} = req.params;
+          //const start = performance.now();
+          redisRes = await redis.get(`notification:${id}`);
+        
+          //console.log(performance.now()-start,"ms","  ",redisRes);
+          if(redisRes)return res.json({success:true,message:"from redis",data:redisRes});
+          else{
+            
+            const dbRes = await Notification.findById(id);
+            //console.log(performance.now()-start);
+            return res.json({success:true,message:"from db",data:dbRes});
+          }
+
+      }
+      catch(err){
+          res.status(400).json({ success: false, error: err.message });
+      }
     }
+   
   
 };
